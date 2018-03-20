@@ -1,0 +1,135 @@
+* init.el
+
+** Aspecto y visualización
+*** Cancela el mensaje de bienvenida.
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-startup-message t)
+#+END_SRC
+
+*** cambio el tema de emacs
+#+BEGIN_SRC emacs-lisp
+(use-package seti-theme
+  :ensure t
+  :config (load-theme 'seti t))
+#+END_SRC
+
+** NAVEGACION
+*** WHICH-KEY muestra que teclas siguen
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode))
+#+END_SRC
+
+*** SWIPER y COUNSEL
+#+BEGIN_SRC emacs-lisp
+;; it looks like counsel is a requirement for swiper
+(use-package counsel
+  :ensure t
+  )
+
+(use-package swiper
+  :ensure try
+  :config
+  (progn
+    (ivy-mode 1)
+    (setq ivy-use-virtual-buffers t)
+    (global-set-key "\C-s" 'swiper)
+    (global-set-key (kbd "C-c C-r") 'ivy-resume)
+    (global-set-key (kbd "<f6>") 'ivy-resume)
+    (global-set-key (kbd "M-x") 'counsel-M-x)
+    (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+    (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+    (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+    (global-set-key (kbd "<f1> l") 'counsel-load-library)
+    (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+    (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+    (global-set-key (kbd "C-c g") 'counsel-git)
+    (global-set-key (kbd "C-c j") 'counsel-git-grep)
+    (global-set-key (kbd "C-c k") 'counsel-ag)
+    (global-set-key (kbd "C-x l") 'counsel-locate)
+    (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+    (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+    ))
+#+END_SRC
+
+** ORG
+*** ORG-BULLETS - Viñetas
+#+BEGIN_SRC emacs-lisp
+(use-package org-bullets
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+#+END_SRC
+
+** BUFFERS Y WINDOWS
+*** ABRE BUFFER EN LA MISMA VENTANA
+#+BEGIN_SRC emacs-lisp
+(defalias 'list-buffer 'ibuffer) ; abre el buffer en la misma ventana
+#+END_SRC
+
+*** para saltar entre ventanas abiertas
+#+BEGIN_SRC emacs-lisp
+(windmove-default-keybindings)
+; add this to init.el
+#+END_SRC
+**** ACE_WIMDOW muestra numero en la ventana para saltar entre ellas
+#+BEGIN_SRC emacs-lisp
+(use-package ace-window
+  :ensure t
+  :init
+  (progn
+    (global-set-key [remap other-window] 'ace-window)
+    (custom-set-faces
+     '(aw-leading-char-face
+       ((t (:inherit ace-jump-face-foreground :height 3.0))))) 
+    ))
+#+END_SRC
+
+** PROGRAMACION
+
+*** jedi
+#+BEGIN_SRC emacs-lisp
+  (use-package jedi
+    :ensure t
+    :init
+    (add-hook 'python-mode-hook 'jedi:setup)
+    (add-hook 'python-mode-hook 'jedi:ac-setup))
+
+#+END_SRC
+*** AUTOCOMPLETADO
+#+BEGIN_SRC emacs-lisp
+(use-package auto-complete
+  :ensure t
+  :init
+  (progn
+    (ac-config-default)
+    (global-auto-complete-mode t)
+    ))
+#+END_SRC
+*** Flycheck
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :init
+    (global-flycheck-mode t))
+
+
+#+END_SRC
+** MAGIT
+#+BEGIN_SRC emacs-lisp
+  (use-package magit
+    :ensure t
+    :config
+    (global-set-key (kbd "C-c m") 'magit-status))
+
+#+END_SRC
+** NO USADOS 
+*** POR TEMA DE CONFIGURACION O CRASH POR OTRA CONFIG
+**** IDO
+#+BEGIN_SRC emacs-lisp
+;; (setq ido-enable-flex-matching t)
+;; (setq ido-everywhere t)
+;; (ido-mode 1)
+#+END_SRC
