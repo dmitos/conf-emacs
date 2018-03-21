@@ -1,20 +1,19 @@
 * init.el
 
-** Aspecto y visualización
-*** Cancela el mensaje de bienvenida.
+* Aspecto y visualización
+** Cancela el mensaje de bienvenida.
 #+BEGIN_SRC emacs-lisp
 (setq inhibit-startup-message t)
 #+END_SRC
 
-*** cambio el tema de emacs
+** cambio el tema de emacs
 #+BEGIN_SRC emacs-lisp
 (use-package seti-theme
   :ensure t
-  :config (load-theme 'seti t))
+  :config (load-theme 'wombat t))
 #+END_SRC
 
-** NAVEGACION
-*** WHICH-KEY muestra que teclas siguen
+* WHICH-KEY muestra que teclas siguen
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
   :ensure t
@@ -22,7 +21,7 @@
   (which-key-mode))
 #+END_SRC
 
-*** SWIPER y COUNSEL
+* SWIPER y COUNSEL
 #+BEGIN_SRC emacs-lisp
 ;; it looks like counsel is a requirement for swiper
 (use-package counsel
@@ -54,7 +53,7 @@
     ))
 #+END_SRC
 
-** ORG
+* ORG
 *** ORG-BULLETS - Viñetas
 #+BEGIN_SRC emacs-lisp
 (use-package org-bullets
@@ -63,19 +62,17 @@
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
 
-** BUFFERS Y WINDOWS
-*** ABRE BUFFER EN LA MISMA VENTANA
+* BUFFERS Y WINDOWS
+** ABRE BUFFER EN LA MISMA VENTANA
 #+BEGIN_SRC emacs-lisp
 (defalias 'list-buffer 'ibuffer) ; abre el buffer en la misma ventana
 #+END_SRC
 
-*** para saltar entre ventanas abiertas
+* ACE_WIMDOW
+ - muestra numero en la ventana para saltar entre ellas
 #+BEGIN_SRC emacs-lisp
 (windmove-default-keybindings)
 ; add this to init.el
-#+END_SRC
-**** ACE_WIMDOW muestra numero en la ventana para saltar entre ellas
-#+BEGIN_SRC emacs-lisp
 (use-package ace-window
   :ensure t
   :init
@@ -85,12 +82,13 @@
      '(aw-leading-char-face
        ((t (:inherit ace-jump-face-foreground :height 3.0))))) 
     ))
+
 #+END_SRC
 
-** PROGRAMACION
-
-*** jedi
+* PYTHON
+** jedi
 #+BEGIN_SRC emacs-lisp
+
   (use-package jedi
     :ensure t
     :init
@@ -98,7 +96,8 @@
     (add-hook 'python-mode-hook 'jedi:ac-setup))
 
 #+END_SRC
-*** AUTOCOMPLETADO
+
+* AUTOCOMPLETADO
 #+BEGIN_SRC emacs-lisp
 (use-package auto-complete
   :ensure t
@@ -108,7 +107,7 @@
     (global-auto-complete-mode t)
     ))
 #+END_SRC
-*** Flycheck
+* FLYCHECK
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
     :ensure t
@@ -117,7 +116,7 @@
 
 
 #+END_SRC
-** MAGIT
+* MAGIT
 #+BEGIN_SRC emacs-lisp
   (use-package magit
     :ensure t
@@ -125,11 +124,36 @@
     (global-set-key (kbd "C-c m") 'magit-status))
 
 #+END_SRC
-** NO USADOS 
+* NO USADOS 
 *** POR TEMA DE CONFIGURACION O CRASH POR OTRA CONFIG
 **** IDO
 #+BEGIN_SRC emacs-lisp
 ;; (setq ido-enable-flex-matching t)
 ;; (setq ido-everywhere t)
 ;; (ido-mode 1)
+#+END_SRC
+* UNDO TREE
+  #+BEGIN_SRC emacs-lisp
+    (use-package undo-tree
+      :ensure t
+      :init
+      (global-undo-tree-mode))
+      
+  #+END_SRC
+  
+* OTROS PAQUETES
+#+BEGIN_SRC emacs-lisp
+  (global-hl-line-mode t)
+  (use-package beacon
+    :ensure t
+    :config
+    (beacon-mode 1))
+
+  ;; expande semanticamente el area
+  (use-package expand-region
+    :ensure t
+    :config
+    (global-set-key (kbd "C-z") 'er/expand-region))
+  (use-package iedit
+    :ensure t)
 #+END_SRC
