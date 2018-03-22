@@ -13,6 +13,11 @@
   :config (load-theme 'wombat t))
 #+END_SRC
 
+** ilumina la linea del cursor
+#+BEGIN_SRC emacs-lisp
+(global-hl-line-mode t)
+
+#+END_SRC
 * WHICH-KEY muestra que teclas siguen
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
@@ -140,20 +145,26 @@
       (global-undo-tree-mode))
       
   #+END_SRC
+
+* EXPAND-REGION
+#+BEGIN_SRC emacs-lisp
+;; expande semanticamente el area
+(use-package expand-region
+    :ensure t
+    :config
+    (global-set-key (kbd "C-z") 'er/expand-region))
+
+#+END_SRC
+* IEDIT
+#+BEGIN_SRC emacs-lisp
+  (use-package iedit
+    :ensure t)
+#+END_SRC
   
 * OTROS PAQUETES
 #+BEGIN_SRC emacs-lisp
-  (global-hl-line-mode t)
   (use-package beacon
     :ensure t
     :config
     (beacon-mode 1))
-
-  ;; expande semanticamente el area
-  (use-package expand-region
-    :ensure t
-    :config
-    (global-set-key (kbd "C-z") 'er/expand-region))
-  (use-package iedit
-    :ensure t)
 #+END_SRC
