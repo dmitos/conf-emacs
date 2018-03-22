@@ -91,7 +91,21 @@
 #+END_SRC
 
 * PYTHON
-** jedi
+#+BEGIN_SRC emacs-lisp
+  (setq py-python-command "python")
+  (setq python-shell-interpreter "python")
+
+#+END_SRC
+** SMARTPARENS
+#+BEGIN_SRC emacs-lisp
+  (use-package smartparens
+    :ensure t
+    :config
+    (use-package smartparens-python)
+    (smartparens-global-mode t))
+
+#+END_SRC
+** JEDI
 #+BEGIN_SRC emacs-lisp
 
   (use-package jedi
@@ -99,6 +113,14 @@
     :init
     (add-hook 'python-mode-hook 'jedi:setup)
     (add-hook 'python-mode-hook 'jedi:ac-setup))
+
+#+END_SRC
+** ELPY
+#+BEGIN_SRC emacs-lisp
+  (use-package elpy
+    :ensure t
+    :config
+    (elpy-enable))
 
 #+END_SRC
 
@@ -125,9 +147,14 @@
 #+BEGIN_SRC emacs-lisp
   (use-package magit
     :ensure t
-    :config
-    (global-set-key (kbd "C-c m") 'magit-status))
+    :init
+    (progn
+    (bind-key "C-x g" 'magit-status)))
 
+  (use-package git-gutter
+    :ensure t
+    :init
+    (global-git-gutter-mode +1))
 #+END_SRC
 * NO USADOS 
 *** POR TEMA DE CONFIGURACION O CRASH POR OTRA CONFIG
@@ -167,4 +194,18 @@
     :ensure t
     :config
     (beacon-mode 1))
+#+END_SRC
+* PROJECTILE
+#+BEGIN_SRC emacs-lisp
+;; projectile
+(use-package projectile
+  :ensure t
+  :config
+  (projectile-global-mode)
+(setq projectile-completion-system 'ivy))
+
+(use-package counsel-projectile
+  :ensure t
+  :config
+  (counsel-projectile-mode))
 #+END_SRC
