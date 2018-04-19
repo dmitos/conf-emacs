@@ -1,5 +1,23 @@
 * init.el
 
+* CONFIGURACION INICIAL
+#+BEGIN_SRC emacs-lisp
+  ;; abre con la teclas C-c I este archivo de configuracion
+  (defun find-config ()
+    (interactive)
+    (find-file "~/.emacs.d/conforg.org"))
+  (global-set-key (kbd "C-c I") 'find-config)
+#+END_SRC
+* INFORMACION PERSONAL
+#+BEGIN_SRC emacs-lisp
+  (setf user-full-name "Diego Otero"
+        user-mail-address "dmitos@gmail.com")
+
+#+END_SRC
+
+#+RESULTS:
+: dmitos@gmail.com
+
 * Aspecto y visualización
 ** Cancela el mensaje de bienvenida.
 #+BEGIN_SRC emacs-lisp
@@ -15,9 +33,17 @@
 
 ** ilumina la linea del cursor
 #+BEGIN_SRC emacs-lisp
-(global-hl-line-mode t)
+  (global-hl-line-mode t)
+  (global-linum-mode t)
+(add-to-list 'load-path "~/.emacs.d/elpa/linum-highlight/")
+  (require 'linum-highlight-current-line-number)
+  (setq linum-format 'linum-highlight-current-line-number)
 
 #+END_SRC
+
+#+RESULTS:
+: linum-highlight-current-line-number
+
 * WHICH-KEY muestra que teclas siguen
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
@@ -61,12 +87,21 @@
 * ORG
 *** ORG-BULLETS - Viñetas
 #+BEGIN_SRC emacs-lisp
-(use-package org-bullets
-  :ensure t
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+;;(use-package org-bullets
+;;  :ensure t
+;;  :config
+;;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
-
+** ORG-MODE
+   #+BEGIN_SRC emacs-lisp
+     (require 'org)
+     (define-key global-map "\C-cl" 'org-store-link)
+     (define-key global-map "\C-ca" 'org-agenda)
+     (setq org-log-done t)
+     (setq org-todo-keywords
+     '((sequence "TODO(t!)" "TAREA [DIEGO](e@/!)" "ESPERANDO(s@/!)" "|" "FINALIZADO(f!)")))
+        
+   #+END_SRC
 * BUFFERS Y WINDOWS
 ** ABRE BUFFER EN LA MISMA VENTANA
 #+BEGIN_SRC emacs-lisp
@@ -195,17 +230,175 @@
     :config
     (beacon-mode 1))
 #+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  ;; (require 'paren)
+  ;; (show-paren-mode 1)
+  ;; (setq show-paren-delay 0)
+  ;; (set-face-background 'show-paren-match (face-background 'default))
+  ;; (set-face-foreground 'show-paren-match "#def")
+  ;; (set-face-attribute 'show-paren-match nil :weight 'extra-bold)
+
+#+END_SRC
+
+#+RESULTS:
+: t
+
+* PAREDIT
+#+BEGIN_SRC emacs-lisp
+
+  (use-package paredit
+    :diminish paredit-mode
+    :config
+    (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+    (add-hook 'lisp-mode-hook 'enable-paredit-mode)
+    (add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode))
+
+#+END_SRC
 * PROJECTILE
 #+BEGIN_SRC emacs-lisp
-;; projectile
-(use-package projectile
-  :ensure t
-  :config
-  (projectile-global-mode)
-(setq projectile-completion-system 'ivy))
+  ;; projectile
+  (use-package projectile
+    :ensure t
+    :config
+    (projectile-global-mode)
+  (setq projectile-completion-system 'ivy))
 
-(use-package counsel-projectile
-  :ensure t
-  :config
-  (counsel-projectile-mode))
+  (use-package counsel-projectile
+    :ensure t
+    :config
+    (counsel-projectile-mode))
+
+  (use-package projectile-speedbar
+    :ensure t
+    :config
+    (global-set-key (kbd "C-<f2>") 'projectile-speedbar))
+#+END_SRC
+
+
+* EMMET-MODE
+#+BEGIN_SRC emacs-lisp
+
+  (use-package emmet-mode
+    :ensure t
+    :config
+    (add-hook 'clojure-mode-hook 'emmet-mode))
+
+#+END_SRC
+* MULTI-MODE-WEB
+#+BEGIN_SRC emacs-lisp
+
+  (require 'multi-web-mode)
+  (setq mweb-default-major-mode 'html-mode)
+  (setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
+                    (js-mode "<script +\\(type=\"text/javascript\"\\|language=\"javascript\"\\)[^>]*>" "</script>")
+                    (css-mode "<style +type=\"text/css\"[^>]*>" "</style>")))
+  (setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
+  (multi-web-global-mode 1)
+
+#+END_SRC
+* YASNIPPET
+#+BEGIN_SRC emacs-lisp
+
+;;YASnippet
+(add-to-list 'load-path "~/.emacs.d/yasnippet")
+(require 'yasnippet)
+(yas-global-mode 1)
+
+;;popup on YASnippet
+(require 'popup)
+(require 'yasnippet)
+
+;; add some shotcuts in popup menu mode
+(define-key popup-menu-keymap (kbd "M-n") 'popup-next)
+(define-key popup-menu-keymap (kbd "TAB") 'popup-next)
+(define-key popup-menu-keymap (kbd "<tab>") 'popup-next)
+(define-key popup-menu-keymap (kbd "<backtab>") 'popup-previous)
+(define-key popup-menu-keymap (kbd "M-p") 'popup-previous)
+
+(defun yas/popup-isearch-prompt (prompt choices &optional display-fn)
+(when (featurep 'popup)
+(popup-menu*
+(mapcar
+(lambda (choice)
+(popup-make-item
+(or (and display-fn (funcall display-fn choice))
+choice)
+:value choice))
+choices)
+:prompt prompt
+;; start isearch mode immediately
+:isearch t
+)))
+
+(setq yas/prompt-functions '(yas/popup-isearch-prompt yas/no-prompt))
+
+#+END_SRC
+
+
+* MOVER-TEXTO
+#+BEGIN_SRC emacs-lisp
+  ;; M-felecha arriba / M-flecha abajo
+    (use-package move-text
+      :ensure t
+      :config
+      (move-text-default-bindings))
+
+#+END_SRC
+
+* VIMISH-FOLD
+pliega y despliega bloques de texto
+#+BEGIN_SRC emacs-lisp
+
+  (use-package vimish-fold
+    :ensure t
+    :defer 10
+    :config
+    (bind-keys :prefix-map shackra-vimish-fold-map
+               :prefix "C-c v"
+               ("v" . vimish-fold-toggle)
+               ("V" . vimish-fold-toggle-all)
+               ("f" . vimish-fold)
+               ("u" . vimish-fold-unfold)
+               ("u" . vimish-fold-unfold-all)
+               ("d" . vimish-fold-delete)
+               ("D" . vimish-fold-delete-all)
+               ("n" . vimish-fold-next-fold)
+               ("p" . vimish-fold-previous-fold))
+    (add-hook 'prog-mode #'vimish-fold-mode))
+
+#+END_SRC
+* HIGHLIGHT-INDENT-GUIDES
+subraya los niveles de identacion en el buffer
+#+BEGIN_SRC emacs-lisp
+
+
+(use-package highlight-indent-guides
+  :after (python-mode)
+  :init
+  (setf highlight-indent-guides-method 'fill)
+  (add-hook 'python-mode 'highlight-indent-guides-mode))
+#+END_SRC
+* HIDE-SHOW
+no me funciona - ver origami
+#+BEGIN_SRC emacs-lisp
+
+  ;;   (eval-after-load 'hideshow
+  ;;    '(progn
+  ;;      (global-set-key (kbd "C-+") 'hs-toggle-hiding)))
+  ;; (hs-minor-mode 1)
+
+
+#+END_SRC
+
+* ORIGAMI
+#+BEGIN_SRC emacs-lisp
+(use-package origami
+  :bind (("C-c TAB" . origami-recursively-toggle-node)
+         ("C-\\" . origami-recursively-toggle-node)
+         ("M-\\" . origami-close-all-nodes)
+         ("M-+" . origami-open-all-nodes))
+  :init
+  (global-origami-mode))
+
 #+END_SRC
