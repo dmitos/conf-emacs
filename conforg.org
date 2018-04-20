@@ -1,21 +1,24 @@
-* ABRIR ARCHIVO CONFIG
-tecla C-c I - abro archivo de configuracion. 
-El que ves ahora
-#+BEGIN_SRC emacs-lisp
+* init.el
 
+* CONFIGURACION INICIAL
+#+BEGIN_SRC emacs-lisp
+  ;; abre con la teclas C-c I este archivo de configuracion
   (defun find-config ()
     (interactive)
     (find-file "~/.emacs.d/conforg.org"))
   (global-set-key (kbd "C-c I") 'find-config)
-
 #+END_SRC
-* INFO PERSONAL
+* INFORMACION PERSONAL
 #+BEGIN_SRC emacs-lisp
   (setf user-full-name "Diego Otero"
         user-mail-address "dmitos@gmail.com")
 
 #+END_SRC
-* Aspecto y visualización
+
+#+RESULTS:
+: dmitos@gmail.com
+
+* ASPECTO Y VISUALIZACION
 ** Cancela el mensaje de bienvenida.
 #+BEGIN_SRC emacs-lisp
 (setq inhibit-startup-message t)
@@ -30,24 +33,25 @@ El que ves ahora
 
 ** ilumina la linea del cursor
 #+BEGIN_SRC emacs-lisp
-      (global-hl-line-mode t)
+  (global-hl-line-mode t)
   (global-linum-mode t)
-    (add-to-list 'load-path "~/.emacs.d/elpa/linum-highlight-current-line-number")
-    (require 'linum-highlight-current-line-number)
-    (setq linum-format 'linum-highlight-current-line-number)
+(add-to-list 'load-path "~/.emacs.d/elpa/linum-highlight/")
+  (require 'linum-highlight-current-line-number)
+  (setq linum-format 'linum-highlight-current-line-number)
+
 #+END_SRC
 
+#+RESULTS:
+: linum-highlight-current-line-number
 
-
-
-
-** cancela el backup
+** VISIBLE BELL
 #+BEGIN_SRC emacs-lisp
-
-  (setq make-backup-files nil)
-
+;; turn on visible bell
+(setq visible-bell t)
 
 #+END_SRC
+
+
 * WHICH-KEY muestra que teclas siguen
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
@@ -88,6 +92,24 @@ El que ves ahora
     ))
 #+END_SRC
 
+* ORG
+*** ORG-BULLETS - Viñetas
+#+BEGIN_SRC emacs-lisp
+;;(use-package org-bullets
+;;  :ensure t
+;;  :config
+;;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+#+END_SRC
+** ORG-MODE
+   #+BEGIN_SRC emacs-lisp
+     (require 'org)
+     (define-key global-map "\C-cl" 'org-store-link)
+     (define-key global-map "\C-ca" 'org-agenda)
+     (setq org-log-done t)
+     (setq org-todo-keywords
+     '((sequence "TODO(t!)" "TAREA [DIEGO](e@/!)" "ESPERANDO(s@/!)" "|" "FINALIZADO(f!)")))
+        
+   #+END_SRC
 * BUFFERS Y WINDOWS
 ** ABRE BUFFER EN LA MISMA VENTANA
 #+BEGIN_SRC emacs-lisp
@@ -119,11 +141,11 @@ El que ves ahora
 #+END_SRC
 ** SMARTPARENS
 #+BEGIN_SRC emacs-lisp
-  ;;(use-package smartparens
-  ;;  :ensure t
-  ;;  :config
-  ;;  (use-package smartparens-python)
-  ;;  (smartparens-global-mode t))
+  ;; (use-package smartparens
+  ;;   :ensure t
+  ;;   :config
+  ;;   (use-package smartparens-python)
+  ;;   (smartparens-global-mode t))
 
 #+END_SRC
 ** JEDI
@@ -142,6 +164,21 @@ El que ves ahora
     :ensure t
     :config
     (elpy-enable))
+
+#+END_SRC
+
+* HIGHLIGHT INDENT GUIDE
+hasta donde veo no funciona en php
+#+BEGIN_SRC emacs-lisp
+(use-package highlight-indent-guides
+  :after
+  (python-mode)
+  (php-mode)
+  
+  :init
+  (setf highlight-indent-guides-method 'fill)
+  (add-hook 'python-mode 'highlight-indent-guides-mode)
+  (add-hook 'php-mode 'highlight-indent-guides-mode))
 
 #+END_SRC
 
@@ -164,7 +201,7 @@ El que ves ahora
 
 
 #+END_SRC
-* MAGIT - GIT-GUTTER
+* MAGIT
 #+BEGIN_SRC emacs-lisp
   (use-package magit
     :ensure t
@@ -210,144 +247,216 @@ El que ves ahora
 #+END_SRC
   
 * OTROS PAQUETES
+** BEACON 
+flashea el lugar del cursor para encontrarlo al mover el buffer
 #+BEGIN_SRC emacs-lisp
   (use-package beacon
     :ensure t
     :config
-    (beacon-mode 1))
+    (beacon-mode 1)
+    (setq beacon-color "#ff8000"))
 #+END_SRC
+
+** PAREN
+ cierra y abre parentesis
+<DESACTIVADO>
+#+BEGIN_SRC emacs-lisp
+  ;; (require 'paren)
+  ;; (show-paren-mode 1)
+  ;; (setq show-paren-delay 0)
+  ;; (set-face-background 'show-paren-match (face-background 'default))
+  ;; (set-face-foreground 'show-paren-match "#def")
+  ;; (set-face-attribute 'show-paren-match nil :weight 'extra-bold)
+
+#+END_SRC
+
+
 * PAREDIT
 #+BEGIN_SRC emacs-lisp
-    (use-package paredit
-      :ensure t
-      :diminish paredit-mode
-      :config
-      (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
-      (add-hook 'lisp-mode-hook 'enable-paredit-mode)
-      (add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
-      (add-hook 'php-mode-hook 'enable-paredit-mode))
+
+  (use-package paredit
+    :diminish paredit-mode
+    :config
+    (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+    (add-hook 'lisp-mode-hook 'enable-paredit-mode)
+    (add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode))
 
 #+END_SRC
 * PROJECTILE
 #+BEGIN_SRC emacs-lisp
-;; projectile
 (use-package projectile
-  :ensure t
-  :config
-  (projectile-global-mode)
-(setq projectile-completion-system 'ivy))
+    :ensure t
+    :config
+    (projectile-global-mode)
+  (setq projectile-completion-system 'ivy))
+#+END_SRC
 
+* COUNSEL-PROJECTILE
+#+BEGIN_SRC emacs-lisp
 (use-package counsel-projectile
-  :ensure t
-  :config
-  (counsel-projectile-mode))
-#+END_SRC
-* WEB-MODE
+    :ensure t
+    :config
+    (counsel-projectile-mode)
+  )
+#+END_SRC  
+
+* SPEEDBAR
 #+BEGIN_SRC emacs-lisp
-  ;;   (defun my-setup-php ()
-  ;;   (web-mode)
-  ;;   (make-local-variable 'web-mode-code-indent-offset)
-  ;;   (make-local-variable 'web-mode-markup-indent-offset)
-  ;;   (make-local-variable 'web-mode-css-indent-offset)
-  ;;   (setq web-mode-code-indent-offset 4)
-  ;;   (setq web-mode-css-indent-offset 2)
-  ;;   (setq web-mode-markup-indent-offset 2))
 
-  ;; (add-to-list 'auto-mode-alist '("\\.php$" . my-setup-php))
+  (use-package speedbar
+    :config
+    (progn
+      (set-variable 'speedbar-use-images nil)
+      (speedbar-add-supported-extension ".rst")))
 
-  ;; (setq web-mode-ac-sources-alist
-  ;;       '(("css" . (ac-source-words-in-buffer ac-source-css-property))
-  ;;         ("php" . (ac-source-[/]words-in-buffer
-  ;;                             ac-source-words-in-same-mode-buffers
-  ;;                             ac-source-dictionary))))
-
-  ;; (add-to-list 'auto-mode-alist '("\\.php$" . my-setup-php))
 #+END_SRC
-* PHP-MODE
+
+* SR-SPEEDBAR
 #+BEGIN_SRC emacs-lisp
-  ;; (require 'php-mode)
-  ;; (eval-after-load 'php-mode
-  ;;   '(require 'php-ext))
+
+  (use-package sr-speedbar
+    :ensure t
+    :init
+    (set-variable 'sr-speedbar-right-side nil))
+
+#+END_SRC
+
+* PROJECTILE-SPEEDBAR
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile-speedbar
+    :ensure t)
+  ;;    :config
+  ;;    (global-set-key (kbd "C-<f2>") 'projectile-speedbar))
+#+END_SRC
+
+* EMMET-MODE
+#+BEGIN_SRC emacs-lisp
+
+  (use-package emmet-mode
+    :ensure t
+    :config
+    (add-hook 'clojure-mode-hook 'emmet-mode))
+
+#+END_SRC
+* MULTI-MODE-WEB
+intentar usarlo con use-package
+#+BEGIN_SRC emacs-lisp
+
+  (require 'multi-web-mode)
+  (setq mweb-default-major-mode 'html-mode)
+  (setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
+                    (js-mode "<script +\\(type=\"text/javascript\"\\|language=\"javascript\"\\)[^>]*>" "</script>")
+                    (css-mode "<style +type=\"text/css\"[^>]*>" "</style>")))
+  (setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
+  (multi-web-global-mode 1)
 
 #+END_SRC
 * YASNIPPET
 #+BEGIN_SRC emacs-lisp
+
+  ;; ;;YASnippet
+  ;; (add-to-list 'load-path "~/.emacs.d/yasnippet")
+  ;; (require 'yasnippet)
+  ;; (yas-global-mode 1)
+
+  ;; ;;popup on YASnippet
+  ;; (require 'popup)
+  ;; (require 'yasnippet)
+
+  ;; ;; add some shotcuts in popup menu mode
+  ;; (define-key popup-menu-keymap (kbd "M-n") 'popup-next)
+  ;; (define-key popup-menu-keymap (kbd "TAB") 'popup-next)
+  ;; (define-key popup-menu-keymap (kbd "<tab>") 'popup-next)
+  ;; (define-key popup-menu-keymap (kbd "<backtab>") 'popup-previous)
+  ;; (define-key popup-menu-keymap (kbd "M-p") 'popup-previous)
+
+  ;; (defun yas/popup-isearch-prompt (prompt choices &optional display-fn)
+  ;; (when (featurep 'popup)
+  ;; (popup-menu*
+  ;; (mapcar
+  ;; (lambda (choice)
+  ;; (popup-make-item
+  ;; (or (and display-fn (funcall display-fn choice))
+  ;; choice)
+  ;; :value choice))
+  ;; choices)
+  ;; :prompt prompt
+  ;; ;; start isearch mode immediately
+  ;; :isearch t
+  ;; )))
+
+  ;; (setq yas/prompt-functions '(yas/popup-isearch-prompt yas/no-prompt))
+
   (use-package yasnippet
     :init
     (yas-global-mode)
     :config
   (yas-reload-all))
+#+END_SRC
+* MULTIPLE-CURSORES
+#+BEGIN_SRC emacs-lisp
+
+(use-package multiple-cursors
+  :ensure t
+  :bind (("M-." . mc/mark-next-like-this)
+         ("M-," . mc/unmark-next-like-this)
+         ("M-S-<mouse-1>" . mc/add-cursor-on-click)))
 
 #+END_SRC
-* MOVER-TEXTO
-M-<arriba> M-<abajo>
+
+* MULTIPLE-CURSORES
+se marca la region
 #+BEGIN_SRC emacs-lisp
+
+(global-set-key (kbd "C-c m c") 'mc/edit-lines)
+
+#+END_SRC
+
+* MOVER-TEXTO
+#+BEGIN_SRC emacs-lisp
+  ;; M-felecha arriba / M-flecha abajo
     (use-package move-text
       :ensure t
       :config
       (move-text-default-bindings))
 
 #+END_SRC
+
 * ORIGAMI
-cierra y abre codigo
 #+BEGIN_SRC emacs-lisp
-
-  (use-package origami
-    :ensure t
-    :bind (("C-c TAB" . origami-recursively-toggle-node)
-           ("C-\\" . origami-recursively-toggle-node)
-           ("M-\\" . origami-close-all-nodes)
-           ("M-+" . origami-open-all-nodes))
-    :init
-    (global-origami-mode))
+(use-package origami
+  :bind (("C-c TAB" . origami-recursively-toggle-node)
+         ("C-\\" . origami-recursively-toggle-node)
+         ("M-\\" . origami-close-all-nodes)
+         ("M-+" . origami-open-all-nodes))
+  :init
+  (global-origami-mode))
 
 #+END_SRC
-* ORG
-*** ORG-BULLETS - Viñetas
+* GOLDEN-RATIO
 #+BEGIN_SRC emacs-lisp
-;; (use-package org-bullets
-;;   :ensure t
-;;   :config
-;;   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-#+END_SRC
-* PLANTUML
-#+BEGIN_SRC emacs-lisp
-  (add-to-list
-   'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
-  (setq org-plantuml-jar-path
-        (expand-file-name "~/plantuml.jar"))
+(use-package golden-ratio
+  :ensure t
+  :diminish golden-ratio-mode
+  :init
+  (golden-ratio-mode 1))
 
 #+END_SRC
-
-* ORG-BABEL
-#+BEGIN_SRC emacs-lisp
-  ;; active Org-babel languages
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '(;; other Babel languages
-     (plantuml . t)))
-
-#+END_SRC
-* Multiples cursores
-#+BEGIN_SRC emacs-lisp
-
-  (global-set-key (kbd "C-c m c") 'mc/edit-lines)
-
-#+END_SRC
-* IDENTIFIACORES POR COLOR
-php no lo maneja al parecer
+* color-identifiers-mode
+al parecer no soporta php-mode
+pero esta interesante en otros lenguajes
 #+BEGIN_SRC emacs-lisp
 (use-package color-identifiers-mode
   :init
   ;; (add-hook 'emacs-lisp-mode-hook #'color-identifiers-mode)
   (add-hook 'after-init-hook 'global-color-identifiers-mode)
 :diminish color-identifiers-mode)
-
 #+END_SRC
 * RAINBOW-DELIMITERS
-Colorea los parentesis en pares
+COLOREA LOS PARENTESIS
 #+BEGIN_SRC emacs-lisp
-  (use-package rainbow-delimiters
+
+(use-package rainbow-delimiters
   :commands (rainbow-delimiters-mode)
   :init
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
@@ -367,50 +476,54 @@ Colorea los parentesis en pares
  '(rainbow-delimiters-depth-7-face ((t (:foreground "spring green"))))
  '(rainbow-delimiters-depth-8-face ((t (:foreground "sienna1"))))))
 
-
-
-
-
-
-
-
-
-
-
 #+END_SRC
 
-#+RESULTS:
-
-* HIGHLIGHT MATCHING PARENTHESIS
+* HIGHLIGHT MATCHING PARENT
 #+BEGIN_SRC emacs-lisp
-
 (defvar show-paren-delay)
 (setq show-paren-delay 0.0)
 (show-paren-mode t)
 
 #+END_SRC
-* MULTI WEB MODE
+* PLANTUML
 #+BEGIN_SRC emacs-lisp
 
-(require 'multi-web-mode)
-(setq mweb-default-major-mode 'html-mode)
-(setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
-                  (js-mode "<script +\\(type=\"text/javascript\"\\|language=\"javascript\"\\)[^>]*>" "</script>")
-                  (css-mode "<style +type=\"text/css\"[^>]*>" "</style>")))
-(setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
-(multi-web-global-mode 1)
+(add-to-list
+ 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+(setq org-plantuml-jar-path
+      (expand-file-name "~/plantuml.jar"))
 
 #+END_SRC
-* HIGHLIGHT INDENT GUIDES
+* VIMISH-FOLD
+pliega y despliega bloques de texto - uso Origami
 #+BEGIN_SRC emacs-lisp
-  (use-package highlight-indent-guides
-    :after
-    (python-mode)
-    (php-mode)
-    
-    :init
-    (setf highlight-indent-guides-method 'fill)
-    (add-hook 'python-mode 'highlight-indent-guides-mode)
-    (add-hook 'php-mode 'highlight-indent-guides-mode))
+
+  ;; (use-package vimish-fold
+  ;;   :ensure t
+  ;;   :defer 10
+  ;;   :config
+  ;;   (bind-keys :prefix-map shackra-vimish-fold-map
+  ;;              :prefix "C-c v"
+  ;;              ("v" . vimish-fold-toggle)
+  ;;              ("V" . vimish-fold-toggle-all)
+  ;;              ("f" . vimish-fold)
+  ;;              ("u" . vimish-fold-unfold)
+  ;;              ("u" . vimish-fold-unfold-all)
+  ;;              ("d" . vimish-fold-delete)
+  ;;              ("D" . vimish-fold-delete-all)
+  ;;              ("n" . vimish-fold-next-fold)
+  ;;              ("p" . vimish-fold-previous-fold))
+  ;;   (add-hook 'prog-mode #'vimish-fold-mode))
+
+#+END_SRC
+* HIDE-SHOW
+no me funciona - ver origami
+#+BEGIN_SRC emacs-lisp
+
+  ;;   (eval-after-load 'hideshow
+  ;;    '(progn
+  ;;      (global-set-key (kbd "C-+") 'hs-toggle-hiding)))
+  ;; (hs-minor-mode 1)
+
 
 #+END_SRC
