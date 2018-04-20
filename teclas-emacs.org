@@ -24,19 +24,17 @@ C-; > edita simultaneamente las region segun las seleccion/ difiere con multicur
 C-c p <SPC> > abre el selector de proyectos
 
 ** MULTIPLE-CURSORES
-C-. > agrega un cursor debajo del mio
+C-. > agrega un cursor debajo del mio.
 C-, > quita cursores
 
 ** MULTIPLE-CURSORES MARCANDO REGION
 C-c m c > se selecciona la region y genera los varios cursores
 ** MOVER-TEXTO
-M-<ARRIBA> > mueve el parrafo hacia arriba
-M-<ABAJO> > mueve el parrafo para abajo
+M-<ARRIBA> > mueve el parrafo hacia arriba.
+M-<ABAJO> > mueve el parrafo para abajo.
 
 ** ORIGAMI
-C-c <TAB> > pliega o despliega el nodo de la funcion
-C-\\ > pliega o despliega recursivamente los nodos 
-M-\\ > cierra todos los nodos
-M-+ > abre todo los nodos
-
-
+C-c <TAB> > pliega o despliega el nodo de la funcion.
+C-\\ > pliega o despliega recursivamente los nodos.
+M-\\ > cierra todos los nodos.
+M-+ > abre todo los nodos.
