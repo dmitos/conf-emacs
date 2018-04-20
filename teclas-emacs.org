@@ -1,0 +1,42 @@
+* TECLAS EMACS
+
+** SWIPER - COUNSEL
+C-s > abre buscador de palabras
+M-x > paquetes buscado con counsel
+
+** ACE-WINDOW
+C-x o > para moverse entre buffers (muestra numero)
+
+** MAGIT
+C-x g > abre el buffer para git con magit
+? > despliega comandos para git
+
+** UNDO-TREE
+C-x u > abre arbol del historial de modificaciones
+
+** EXPAND-REGION
+C-z > expande la seleccion de texto semanticamente
+
+** IEDIT
+C-; > edita simultaneamente las region segun las seleccion/ difiere con multicursor en que es a partir de la busqueda de la seleccion
+
+** PROJECTILE
+C-c p <SPC> > abre el selector de proyectos
+
+** MULTIPLE-CURSORES
+C-. > agrega un cursor debajo del mio
+C-, > quita cursores
+
+** MULTIPLE-CURSORES MARCANDO REGION
+C-c m c > se selecciona la region y genera los varios cursores
+** MOVER-TEXTO
+M-<ARRIBA> > mueve el parrafo hacia arriba
+M-<ABAJO> > mueve el parrafo para abajo
+
+** ORIGAMI
+C-c <TAB> > pliega o despliega el nodo de la funcion
+C-\\ > pliega o despliega recursivamente los nodos 
+M-\\ > cierra todos los nodos
+M-+ > abre todo los nodos
+
+
